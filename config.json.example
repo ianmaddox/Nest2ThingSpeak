@@ -1,12 +1,14 @@
 {
     "-HELP-": [
-		"daemon_mode controlls whether the index.php script should continue to run (0)one-time or (1) indefinitely,",
-		"            uploading events in real-time.",
+		"daemon_mode controls whether the index.php script should continue to run (0)one-time or (1) indefinitely,",
+		"    uploading events in real-time.",
+		"dupe_report_cooldown_sec sets the number of seconds the script should wait before sending a report that",
+		"    contains the same values as the previous. Set to zero to disable cooldown.",
 		"Nest credentials can be obtained from https://developer.nest.com/",
 		"ThingSpeak credentials can be obtained from https://thingspeak.com/"
     ],
-
     "daemon_mode": 1,
+    "dupe_report_cooldown_sec": 900,
     "nest": {
 		"client_id":     "PROVIDE YOUR CLIENT ID HERE",
 		"client_secret": "PROVIDE YOUR CLIENT SECRET HERE"

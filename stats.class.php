@@ -9,12 +9,15 @@ class Stats {
      * but we still want to protect it from casual browsing.
      */
     const TOKEN_FILE = '/.nestToken.php';
+
     /* @var Nest */
     private $nest;
 
     /* @var Thingspeak */
     private $thingspeak;
     private $cfg;
+    private $lastPush;
+    private $lastHash;
 
     /**
      *
@@ -94,13 +97,22 @@ class Stats {
 	// Nest decided to return the data in a different format if you're streaming events.
 	$thermo = current($this->cfg->daemon_mode ? $nestData['data']['thermostats'] : $nestData['thermostats']);
         $data = [
+            // The keys in this array only serve to label the values in the output below.
+            // The order of the elements is what determines which field each bit of information will occupy.
             'temp' => $thermo['ambient_temperature_f'],
             'target_temp' => $thermo['target_temperature_f'],
             'humidity' => $thermo['humidity'],
             'has_leaf' => (int)$thermo['has_leaf']
         ];
+        $msgHash = md5(serialize($data));
+        if($msgHash == $this->lastHash && time() <= ($this->lastPush + (int)$this->cfg->dupe_report_cooldown_sec)) {
+            // If the report is identical to the previous message we sent, wait 'dupe_report_cooldown_sec' seconds before
+            // making another report.
+            return;
+        }
         $this->thingspeak->sendData($data);
-
+        $this->lastPush = time();
+        $this->lastHash = $msgHash;
 	// Output data
 	echo date(DATE_W3C);
 	foreach($data as $key => $val) {

@@ -37,7 +37,6 @@ class Thingspeak {
      * @return string HTTP response code
      */
     public function sendData(array $data) {
-	$data['has_leaf'] = (int)$data['has_leaf'];
 	$qs = [];
 	$i = 1;
 	foreach($data as $junk => $val) {

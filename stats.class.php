@@ -104,7 +104,7 @@ class Stats {
             'humidity' => $thermo['humidity'],
             'has_leaf' => (int)$thermo['has_leaf']
         ];
-        $msgHash = md5(serialize($nestData));
+        $msgHash = md5(serialize($data));
         if($msgHash == $this->lastHash && time() <= ($this->lastPush + (int)$this->cfg->dupe_report_cooldown_sec)) {
             // If the report is identical to the previous message we sent, wait 'dupe_report_cooldown_sec' seconds before
             // making another report.
@@ -113,7 +113,6 @@ class Stats {
         $this->thingspeak->sendData($data);
         $this->lastPush = time();
         $this->lastHash = $msgHash;
-
 	// Output data
 	echo date(DATE_W3C);
 	foreach($data as $key => $val) {

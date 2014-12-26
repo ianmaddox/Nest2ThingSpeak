@@ -41,7 +41,7 @@ class Daemon {
       $this->timeoutSec = (int)$timeoutSeconds;
       $this->maxPeers = (int)$maxPeers;
 
-      $pidDir .= substr($pidDir,-1) == DIRECTORY_SEPARATOR ? '' : '/';
+      $pidDir .= substr($pidDir, -1) == DIRECTORY_SEPARATOR ? '' : '/';
       $this->pidDir = $pidDir;
       $this->killFlag = false;
       $this->started = false;
@@ -64,7 +64,6 @@ class Daemon {
       }
       $this->started = true;
       $clearToRun = $this->heartbeat(false);
-//print_r($clearToRun);$this->stop();die();
       return $clearToRun;
    }
 
@@ -93,7 +92,8 @@ class Daemon {
          return false;
       }
       $this->readPidFile();
-      if(count($this->data) > $this->maxPeers) {
+      unset($this->data[getmypid()]);
+      if(count($this->data) >= $this->maxPeers) {
          $this->unlockPidFile();
          // Could not obtain a lock.  Daemon should clean up and quit.
          return false;

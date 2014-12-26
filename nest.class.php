@@ -86,6 +86,7 @@ class Nest {
 		call_user_func($callback, $data);
 	    }
 	}
+	echo "Daemon stopping...\n";
 	$daemon->stop();
     }
 
